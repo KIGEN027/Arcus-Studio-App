@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Create Account — ARCUS</title>
+  <link rel="stylesheet" href="../css/auth.css"/>
+</head>
+<body>
+<div class="auth-root">
+  <aside class="auth-visual">
+    <div class="auth-visual-bg"></div>
+    <div class="auth-visual-grid"></div>
+    <div class="auth-logo">
+      <div class="logo-mark">A</div>
+      <span class="logo-text">Arcu<span>s</span></span>
+    </div>
+    <div class="auth-visual-content">
+      <h2 class="auth-visual-title">Everything your<br>team needs to <span class="grad">thrive</span></h2>
+      <p class="auth-visual-sub">Join 12,000+ teams who manage projects smarter with Arcus.</p>
+      <div class="auth-float-cards">
+        <div class="auth-float-card">
+          <div class="float-card-icon" style="background:rgba(16,185,129,.15)">✅</div>
+          <div>
+            <div class="float-card-title">Free forever plan</div>
+            <div class="float-card-sub">Up to 3 projects & 5 members</div>
+          </div>
+        </div>
+        <div class="auth-float-card">
+          <div class="float-card-icon" style="background:rgba(99,120,255,.15)">⚡</div>
+          <div>
+            <div class="float-card-title">Ready in 2 minutes</div>
+            <div class="float-card-sub">No credit card required</div>
+          </div>
+        </div>
+        <div class="auth-float-card">
+          <div class="float-card-icon" style="background:rgba(245,158,11,.15)">🔒</div>
+          <div>
+            <div class="float-card-title">Enterprise security</div>
+            <div class="float-card-sub">SOC 2 Type II certified</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="auth-visual-footer"><a href="#">Privacy</a><a href="#">Terms</a><span>© 2026 Arcus</span></div>
+  </aside>
+
+  <main class="auth-panel">
+    <div class="auth-form-wrap animate-fade-up">
+      <div class="auth-form-header">
+        <h1 class="auth-form-title">Create your account</h1>
+        <p class="auth-form-sub">Already have one? <a href="login.html">Sign in →</a></p>
+      </div>
+
+      <div id="auth-error" class="auth-error" style="display:none">
+        <span>⚠</span><span id="auth-error-msg"></span>
+      </div>
+
+      <form class="auth-form" id="register-form" novalidate>
+        <div class="grid-2">
+          <div class="input-group">
+            <label class="input-label" for="first-name">First Name</label>
+            <input class="input" type="text" id="first-name" name="firstName"
+              placeholder="Jane" required/>
+          </div>
+          <div class="input-group">
+            <label class="input-label" for="last-name">Last Name</label>
+            <input class="input" type="text" id="last-name" name="lastName"
+              placeholder="Smith" required/>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="email">Work Email</label>
+          <input class="input" type="email" id="email" name="email"
+            placeholder="you@company.com" required autocomplete="email"/>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="workspace">Workspace Name</label>
+          <input class="input" type="text" id="workspace" name="workspace"
+            placeholder="Acme Inc." required/>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label" for="password">Password</label>
+          <div class="password-row">
+            <input class="input" type="password" id="password" name="password"
+              placeholder="Min. 8 characters" required minlength="8"/>
+            <button type="button" class="password-toggle" id="pw-toggle">👁</button>
+          </div>
+        </div>
+
+        <!-- Strength meter -->
+        <div id="pw-strength-wrap" style="display:none">
+          <div class="progress">
+            <div class="progress-fill" id="pw-strength-bar" style="width:0%"></div>
+          </div>
+          <p id="pw-strength-label" class="text-xs text-muted mt-1"></p>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full btn-lg" id="register-btn">
+          Create Free Account →
+        </button>
+      </form>
+
+      <p class="auth-terms" style="margin-top:1.5rem">
+        By creating an account you agree to our <a href="#">Terms of Service</a>
+        and <a href="#">Privacy Policy</a>.
+      </p>
+    </div>
+  </main>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/utils.js"></script>
+<script src="../js/auth.js"></script>
+<script>
+  // Password strength meter
+  const pwInput = document.getElementById('password');
+  const strengthWrap = document.getElementById('pw-strength-wrap');
+  const strengthBar = document.getElementById('pw-strength-bar');
+  const strengthLabel = document.getElementById('pw-strength-label');
+  const levels = [
+    { min:0,  label:'Too short',  color:'#f43f5e', w:'15%' },
+    { min:1,  label:'Weak',       color:'#f43f5e', w:'30%' },
+    { min:2,  label:'Fair',       color:'#f59e0b', w:'55%' },
+    { min:3,  label:'Good',       color:'#6378ff', w:'75%' },
+    { min:4,  label:'Strong 💪',  color:'#10b981', w:'100%' }
+  ];
+  function scorePassword(pw) {
+    let s = 0;
+    if (pw.length >= 8)   s++;
+    if (pw.length >= 12)  s++;
+    if (/[A-Z]/.test(pw)) s++;
+    if (/[0-9]/.test(pw)) s++;
+    if (/[^A-Za-z0-9]/.test(pw)) s++;
+    return Math.min(s, 4);
+  }
+  pwInput.addEventListener('input', () => {
+    const v = pwInput.value;
+    if (!v) { strengthWrap.style.display='none'; return; }
+    strengthWrap.style.display='block';
+    const score = scorePassword(v);
+    const lv = levels[score];
+    strengthBar.style.width = lv.w;
+    strengthBar.style.background = lv.color;
+    strengthLabel.textContent = lv.label;
+    strengthLabel.style.color = lv.color;
+  });
+</script>
+</body>
+</html>
