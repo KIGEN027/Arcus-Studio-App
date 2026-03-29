@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Projects — ARCUS</title>
+  <link rel="stylesheet" href="../css/dashboard.css"/>
+</head>
+<body>
+<div class="app-shell">
+  <!-- SIDEBAR (shared) -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">A</div>
+      <span class="logo-text">Arcu<span>s</span></span>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Main</div>
+      <a href="dashboard.html" class="sidebar-link"><span class="link-icon">🏠</span> Overview</a>
+      <a href="projects.html" class="sidebar-link active"><span class="link-icon">📁</span> Projects <span class="link-badge">6</span></a>
+      <a href="board.html" class="sidebar-link"><span class="link-icon">🗂</span> Board</a>
+      <a href="tasks.html" class="sidebar-link"><span class="link-icon">✅</span> My Tasks <span class="link-badge amber">4</span></a>
+      <a href="team.html" class="sidebar-link"><span class="link-icon">👥</span> Team</a>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">Settings</div>
+      <a href="settings.html" class="sidebar-link"><span class="link-icon">⚙️</span> Settings</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="avatar av-blue">JD</div>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name">Jane Doe</div>
+          <div class="sidebar-user-role">Admin</div>
+        </div>
+        <div class="status-dot online"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="topbar-breadcrumb">
+      <span>Arcus</span><span class="bc-sep">/</span>
+      <span class="bc-current">Projects</span>
+    </div>
+    <div class="topbar-search">
+      <span class="topbar-search-icon">🔍</span>
+      <input class="input" type="search" placeholder="Search projects…" id="proj-search"/>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn btn-ghost btn-icon" data-tip="Notifications">🔔 <span class="notif-dot"></span></button>
+      <button class="btn btn-primary btn-sm" onclick="openNewProjectModal()">+ New Project</button>
+      <div class="avatar av-blue">JD</div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main-content">
+    <div class="page-header">
+      <div class="page-header-left">
+        <div class="page-title">Projects</div>
+        <div class="page-sub">Manage and track all your team's projects</div>
+      </div>
+      <div class="page-header-right">
+        <div style="display:flex;gap:.4rem">
+          <button class="btn btn-ghost btn-icon btn-sm view-toggle active" data-view="grid" data-tip="Grid view">▦</button>
+          <button class="btn btn-ghost btn-icon btn-sm view-toggle" data-view="list" data-tip="List view">≡</button>
+        </div>
+        <select class="input" id="proj-status-filter" style="width:auto;height:36px;font-size:.83rem">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="completed">Completed</option>
+          <option value="on-hold">On Hold</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Project Cards Grid -->
+    <div id="projects-grid" class="grid-3" style="gap:1rem"></div>
+    <div id="projects-empty" style="display:none;text-align:center;padding:5rem;color:var(--text-3)">
+      <div style="font-size:3rem;margin-bottom:1rem">📂</div>
+      <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--text-2);margin-bottom:.5rem">No projects yet</div>
+      <p>Create your first project to get started</p>
+      <button class="btn btn-primary mt-4" onclick="openNewProjectModal()">+ Create Project</button>
+    </div>
+  </main>
+</div>
+
+<!-- NEW PROJECT MODAL -->
+<div class="modal-overlay" id="project-modal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-header">
+      <div class="modal-title">Create New Project</div>
+      <button class="modal-close" onclick="closeModal('project-modal')">✕</button>
+    </div>
+    <form id="new-project-form">
+      <div style="display:flex;flex-direction:column;gap:1rem">
+        <div class="input-group">
+          <label class="input-label">Project Name *</label>
+          <input class="input" type="text" id="proj-name" placeholder="e.g. Website Redesign" required/>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Description</label>
+          <textarea class="input" id="proj-desc" placeholder="What is this project about?" rows="3"></textarea>
+        </div>
+        <div class="grid-2">
+          <div class="input-group">
+            <label class="input-label">Start Date</label>
+            <input class="input" type="date" id="proj-start"/>
+          </div>
+          <div class="input-group">
+            <label class="input-label">Due Date</label>
+            <input class="input" type="date" id="proj-due"/>
+          </div>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Color</label>
+          <div style="display:flex;gap:.6rem;flex-wrap:wrap" id="color-picker">
+            <div class="color-opt" data-color="#6378ff" style="width:28px;height:28px;border-radius:50%;background:#6378ff;cursor:pointer;border:2px solid transparent;transition:all .15s" title="Blue"></div>
+            <div class="color-opt" data-color="#a855f7" style="width:28px;height:28px;border-radius:50%;background:#a855f7;cursor:pointer;border:2px solid transparent;transition:all .15s" title="Violet"></div>
+            <div class="color-opt" data-color="#10b981" style="width:28px;height:28px;border-radius:50%;background:#10b981;cursor:pointer;border:2px solid transparent;transition:all .15s" title="Emerald"></div>
+            <div class="color-opt" data-color="#f59e0b" style="width:28px;height:28px;border-radius:50%;background:#f59e0b;cursor:pointer;border:2px solid transparent;transition:all .15s" title="Amber"></div>
+            <div class="color-opt" data-color="#f43f5e" style="width:28px;height:28px;border-radius:50%;background:#f43f5e;cursor:pointer;border:2px solid transparent;transition:all .15s" title="Rose"></div>
+            <div class="color-opt" data-color="#22d3ee" style="width:28px;height:28px;border-radius:50%;background:#22d3ee;cursor:pointer;border:2px solid transparent;transition:all .15s" title="Cyan"></div>
+          </div>
+          <input type="hidden" id="proj-color" value="#6378ff"/>
+        </div>
+        <div style="display:flex;gap:.75rem;justify-content:flex-end">
+          <button type="button" class="btn btn-ghost" onclick="closeModal('project-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Project</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+<script src="../js/utils.js"></script>
+<script src="../js/projects.js"></script>
+</body>
+</html>
